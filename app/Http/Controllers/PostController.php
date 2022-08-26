@@ -5,17 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\View as FacadesView;
+use Illuminate\View\View as ViewView;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $posts = Post::all();
+        return view('welcome', compact('posts'));
     }
 
     /**
@@ -32,11 +38,14 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StorePostRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return string
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): RedirectResponse
     {
-        //
+        $data = $request -> Validated();
+        Post::create($data);
+
+        return redirect()->route('blog.index');
     }
 
     /**
@@ -76,11 +85,13 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(int $id): RedirectResponse
     {
-        //
+        $post = Post::Find($id);
+        if(isset($post)) $post->delete();
+        return redirect() -> route('blog.index');
     }
 }

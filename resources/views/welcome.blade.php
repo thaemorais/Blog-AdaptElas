@@ -22,25 +22,31 @@
     </head>
     <body class="antialiased" style="background-color: blueviolet; display: flex; flex-direction: column">
         <h1>MEU BLOG</h1>
-        <label for="title">
-            Título
-            <input name='title' type="text">
-        </label>
+        <form id='meu-form' action="{{route('blog.store')}}" method="POST" style="background-color: blueviolet; display: flex; flex-direction: column">
+            @csrf
+            @method('POST')
+            <label for="title">
+                Título
+                <input name='title' type="text">
+            </label>
 
-        <label for="description">
-            Descrição
-            <input name='description' type="text">
-        </label>
+            <label for="description">
+                Descrição
+                <input name='description' type="text">
+            </label>
 
-        <label for="author">
-            Autor
-            <input name='author' type="text">
-        </label>
+            <label for="author">
+                Autor
+                <input name='author' type="text">
+            </label>
 
-        <label for="text">
-            Texto
-            <input name='text' type="text">
-        </label>
+            <label for="text">
+                Texto
+                <input name='text' type="text">
+            </label>
+        </form>
+        <input type="submit" form="meu-form">
+
         <div>
             @isset($posts)
                 @foreach ($posts as $post)
@@ -48,6 +54,11 @@
                     <h3>{{$post->description}}</h3>
                     <p>{{$post->text}}</p>
                     <span>By: {{$post->author}}</span>
+                    <form id= 'delete-{{$post->id}}' action='{{route('blog.delete', $post->id)}}' method="POST">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    <input type="submit" form="delete-{{$post->id}}">
                 @endforeach
             @endisset
         </div>
